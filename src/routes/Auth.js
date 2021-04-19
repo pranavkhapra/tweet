@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
-import firebase from '../base';
-import 'firebase/auth';
+import { authService, firebaseInstance } from '../base';
 
 function Auth() {
   const [values, setValues] = useState('');
@@ -26,19 +25,26 @@ function Auth() {
     event.preventDefault();
     try {
       if (newAccount) {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(values.email, values.password)
-          .then((userCredential) => {
-            // Signed in
-            const { user } = userCredential;
-            // ...
-          });
+        authService.createUserWithEmailAndPassword(
+          values.email,
+          values.password
+        );
       } else {
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(values.email, values.password);
+        authService.signInWithEmailAndPassword(values.email, values.password);
       }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  const socialLogin = async (event) => {
+    let provider;
+    try {
+      if (event.target.name === 'google') {
+        provider = new firebaseInstance.auth.GoogleAuthProvider();
+      } else if (event.target.name === 'github') {
+        provider = new firebaseInstance.auth.GithubAuthProvider();
+      }
+      await authService.signInWithPopup(provider);
     } catch (error) {
       setError(error.message);
     }
@@ -74,8 +80,12 @@ function Auth() {
       {error}
 
       <div>
-        <button type="button">Continue With Github</button>
-        <button type="button">Continue With Google</button>
+        <button type="button" name="github" onClick={socialLogin}>
+          Continue With Github
+        </button>
+        <button type="button" name="google" onClick={socialLogin}>
+          Continue With Google
+        </button>
       </div>
     </div>
   );
