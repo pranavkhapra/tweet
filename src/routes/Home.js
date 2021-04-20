@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { dbService } from '../base';
+import { v4 as uuidv4 } from 'uuid';
+import { dbService, storageService } from '../base';
 import Tweets from '../components/Tweets';
 // we dont have to have real time here its best for chat application
 function Home({ userObject }) {
@@ -35,13 +36,29 @@ function Home({ userObject }) {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.collection('tweets').add({
+    const attachmentReference = storageService
+      .ref()
+      .child(`${userObject.uid}/${uuidv4()}`);
+    const response = await attachmentReference.putString(
+      attachment,
+      'data_url'
+    );
+    const attachmentUrl = await response.ref.getDownloadURL();
+    const ptweet = {
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObject.uid,
-    });
-    // when created the new tweet is empty again
+      attachmentUrl,
+    };
+
+    await dbService.collection('tweets').add(ptweet);
+    //   text: tweet,
+    //   createdAt: Date.now(),
+    //   creatorId: userObject.uid,
+    // });
+    // // when created the new tweet is empty again
     setTweet('');
+    setAttachment('');
   };
   const onChange = (event) => {
     setTweet(event.target.value);
