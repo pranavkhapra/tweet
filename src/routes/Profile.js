@@ -1,8 +1,11 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { authService, dbService } from '../base';
 
-function Profile({ userObject }) {
+function Profile({ userObject, refreshUser }) {
   const [newDisplayName, setNewDisplayName] = useState(userObject.displayName);
   const OnLogOutClick = () => {
     authService.signOut();
@@ -29,22 +32,34 @@ function Profile({ userObject }) {
       await userObject.updateProfile({
         displayName: newDisplayName,
       });
+      refreshUser();
     }
   };
   return (
     <>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Display Name"
-          onChange={onChange}
-          value={newDisplayName}
-        />
-        <input type="text" placeholder="Update Profile" />
-      </form>
-      <button type="button" onClick={OnLogOutClick}>
-        Log Out
-      </button>
+      <div className="container">
+        <form onSubmit={onSubmit} className="profileForm">
+          <input
+            type="text"
+            placeholder="Display Name"
+            autoFocus
+            onChange={onChange}
+            value={newDisplayName}
+            className="formInput"
+          />
+          <input
+            type="submit"
+            placeholder="Update Profile"
+            className="formBtn"
+            style={{
+              marginTop: 10,
+            }}
+          />
+        </form>
+        <span className="formBtn cancelBtn logOut" onClick={OnLogOutClick}>
+          Log Out
+        </span>
+      </div>
     </>
   );
 }

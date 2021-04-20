@@ -1,5 +1,10 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { dbService, storageService } from '../base';
 
 function Tweets({ tweetObject, isOwner }) {
@@ -25,43 +30,40 @@ function Tweets({ tweetObject, isOwner }) {
   };
   const toggleEditing = () => setEditing((prev) => !prev);
   return (
-    <div>
+    <div className="nweet">
       {editing ? (
         <>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} className="container nweetEdit">
             <input
               type="text"
               placeholder="Edit your tweet"
               value={newTweet}
               required
+              autoFocus
               onChange={onChange}
+              className="formInput"
             />
-            <input type="submit" value="Update Tweet" />
+            <input type="submit" value="Update Nweet" className="formBtn" />
           </form>
-          <button type="button" onClick={toggleEditing}>
+          <span onClick={toggleEditing} className="formBtn cancelBtn">
             Cancel
-          </button>
+          </span>
         </>
       ) : (
         <>
           <h4>{tweetObject.text}</h4>
           {tweetObject.attachmentUrl && (
-            <img
-              src={tweetObject.attachmentUrl}
-              width="50px"
-              height="50px"
-              alt="attachment"
-            />
+            <img src={tweetObject.attachmentUrl} alt="attachment" />
           )}
           {isOwner && (
-            <>
-              <button type="button" onClick={onDeleteClick}>
-                Delete Tweet
-              </button>
-              <button type="button" onClick={toggleEditing}>
-                Edit Tweet
-              </button>
-            </>
+            <div className="nweet__actions">
+              <span onClick={onDeleteClick}>
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+              <span onClick={toggleEditing}>
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </span>
+            </div>
           )}
         </>
       )}

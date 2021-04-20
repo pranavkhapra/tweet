@@ -6,9 +6,18 @@ import Home from '../routes/Home';
 import Navigation from './Navigation';
 import Profile from '../routes/Profile';
 
-function Router({ isLoggedIn, userObject }) {
+function Router({ isLoggedIn, userObject, refreshUser }) {
   return (
-    <>
+    <div
+      style={{
+        maxWidth: 890,
+        width: '100%',
+        margin: '0 auto',
+        marginTop: 80,
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
       <BrowserRouter>
         <Switch>
           {isLoggedIn && <Navigation userObject={userObject} /> ? (
@@ -18,7 +27,7 @@ function Router({ isLoggedIn, userObject }) {
                 <Home userObject={userObject} />
               </Route>
               <Route path="/profile" />
-              <Profile userObject={userObject} />
+              <Profile userObject={userObject} refreshUser={refreshUser} />
               <Redirect from="*" to="/" />
             </>
           ) : (
@@ -29,7 +38,7 @@ function Router({ isLoggedIn, userObject }) {
           )}
         </Switch>
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 
