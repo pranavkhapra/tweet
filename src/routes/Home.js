@@ -36,21 +36,23 @@ function Home({ userObject }) {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    const attachmentReference = storageService
-      .ref()
-      .child(`${userObject.uid}/${uuidv4()}`);
-    const response = await attachmentReference.putString(
-      attachment,
-      'data_url'
-    );
-    const attachmentUrl = await response.ref.getDownloadURL();
+    let attachmentUrl = '';
+    if (attachment !== '') {
+      const attachmentReference = storageService
+        .ref()
+        .child(`${userObject.uid}/${uuidv4()}`);
+      const response = await attachmentReference.putString(
+        attachment,
+        'data_url'
+      );
+      attachmentUrl = await response.ref.getDownloadURL();
+    }
     const ptweet = {
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObject.uid,
       attachmentUrl,
     };
-
     await dbService.collection('tweets').add(ptweet);
     //   text: tweet,
     //   createdAt: Date.now(),
