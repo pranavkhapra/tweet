@@ -17,6 +17,7 @@ function Tweets({ tweetObject, isOwner }) {
     await dbService.doc(`tweets/${tweetObject.id}`).update({
       text: newTweet,
     });
+    setEditing(false);
   };
   const onChange = (event) => {
     setNewTweet(event.target.value);

@@ -6,6 +6,7 @@ import Tweets from '../components/Tweets';
 function Home({ userObject }) {
   const [tweet, setTweet] = useState('');
   const [tweets, setTweets] = useState([]);
+  const [attachment, setAttachment] = useState(null);
   // when components get mount we call getTweets and get all the data querysnpshot
   // const getTweets = async () => {
   //   const dbTweets = await dbService.collection('tweets').get();
@@ -22,6 +23,8 @@ function Home({ userObject }) {
   useEffect(() => {
     // getTweets();
     // making it a real time and all
+    // snapshot is basically a listener that tell us what happens to database
+    // we create an array and put in tweets array
     dbService.collection('tweets').onSnapshot((snapshot) => {
       const tweetsArray = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -43,6 +46,21 @@ function Home({ userObject }) {
   const onChange = (event) => {
     setTweet(event.target.value);
   };
+  const onFileChange = (event) => {
+    // get the file
+    const theFile = event.target.files[0];
+    // read the file
+    const reader = new FileReader();
+    // read the file as data url
+    reader.onloadend = (finishedEvent) => {
+      // console.log(finishedEvent);
+      setAttachment(finishedEvent.currentTarget.result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+  const onClearAttachmentClick = () => {
+    setAttachment(null);
+  };
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -53,7 +71,16 @@ function Home({ userObject }) {
           value={tweet}
           onChange={onChange}
         />
+        <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="tweet" />
+        {attachment && (
+          <>
+            <img src={attachment} width="50px" height="50px" alt="attachment" />
+            <button onClick={onClearAttachmentClick} type="button">
+              Cancel Upload
+            </button>
+          </>
+        )}
       </form>
       <div>
         {tweets.map((oneTweet) => (
