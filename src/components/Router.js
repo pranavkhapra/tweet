@@ -6,7 +6,7 @@ import Home from '../routes/Home';
 import Navigation from './Navigation';
 import Profile from '../routes/Profile';
 
-function Router({ isLoggedIn }) {
+function Router({ isLoggedIn, userObject }) {
   return (
     <>
       <BrowserRouter>
@@ -14,7 +14,9 @@ function Router({ isLoggedIn }) {
           {isLoggedIn && <Navigation /> ? (
             <>
               <Navigation />
-              <Route path="/" component={Home} />
+              <Route path="/">
+                <Home userObject={userObject} />
+              </Route>
               <Route path="/profile" component={Profile} />
               <Redirect from="*" to="/" />
             </>

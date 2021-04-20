@@ -6,10 +6,12 @@ import loadingImage from '../images/loading.svg';
 function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userObject, setUserObject] = useState(null);
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
+        setUserObject(user);
       } else {
         setIsLoggedIn(false);
       }
@@ -19,7 +21,7 @@ function App() {
   return (
     <div>
       {init ? (
-        <Router isLoggedIn={isLoggedIn} />
+        <Router isLoggedIn={isLoggedIn} userObject={userObject} />
       ) : (
         <img src={loadingImage} alt="loading..." />
       )}
