@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
+import { dbService } from '../base';
 
 function Home() {
-  const [tweet, setTweet] = useState('');
-  const onSubmit = (event) => {
+  const [tweet, setTweet] = useState([]);
+  // whenever we submit the form we want to create the document
+  const onSubmit = async (event) => {
     event.preventDefault();
+    await dbService.collection('tweets').add({
+      tweet,
+      createdAt: Date.now(),
+    });
+    // when created the new tweet is empty again
+    setTweet('');
   };
   const onChange = (event) => {
-    setTweet({
-      [event.target.name]: event.target.value,
-    });
+    setTweet(event.target.value);
   };
   return (
     <div>
