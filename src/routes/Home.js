@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { dbService } from '../base';
-
+import Tweets from '../components/Tweets';
+// we dont have to have real time here its best for chat application
 function Home({ userObject }) {
   const [tweet, setTweet] = useState('');
   const [tweets, setTweets] = useState([]);
@@ -56,9 +57,11 @@ function Home({ userObject }) {
       </form>
       <div>
         {tweets.map((oneTweet) => (
-          <div key={oneTweet.id}>
-            <h1>{oneTweet.text}</h1>
-          </div>
+          <Tweets
+            key={oneTweet.id}
+            tweetObject={oneTweet}
+            isOwner={oneTweet.creatorId === userObject.uid}
+          />
         ))}
       </div>
     </div>
