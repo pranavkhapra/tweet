@@ -1,45 +1,41 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Auth from '../routes/Auth';
 import Home from '../routes/Home';
-import Navigation from './Navigation';
 import Profile from '../routes/Profile';
+import Navigation from './Navigation';
 
-function Router({ isLoggedIn, userObject, refreshUser }) {
-  return (
-    <div
-      style={{
-        maxWidth: 890,
-        width: '100%',
-        margin: '0 auto',
-        marginTop: 80,
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <BrowserRouter>
-        <Switch>
-          {isLoggedIn && <Navigation userObject={userObject} /> ? (
-            <>
-              <Navigation />
-              <Route path="/">
-                <Home userObject={userObject} />
-              </Route>
-              <Route path="/profile" />
-              <Profile userObject={userObject} refreshUser={refreshUser} />
-              <Redirect from="*" to="/" />
-            </>
-          ) : (
-            <>
-              <Route path="/" component={Auth} />
-              <Redirect from="*" to="/" />
-            </>
-          )}
-        </Switch>
-      </BrowserRouter>
-    </div>
-  );
-}
-
-export default Router;
+const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => (
+  <Router>
+    {isLoggedIn && <Navigation userObj={userObj} />}
+    <Switch>
+      {isLoggedIn ? (
+        <div
+          style={{
+            maxWidth: 890,
+            width: '100%',
+            margin: '0 auto',
+            marginTop: 80,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Route exact path="/">
+            <Home userObj={userObj} />
+          </Route>
+          <Route exact path="/profile">
+            <Profile userObj={userObj} refreshUser={refreshUser} />
+          </Route>
+        </div>
+      ) : (
+        <>
+          <Route exact path="/">
+            <Auth />
+          </Route>
+        </>
+      )}
+    </Switch>
+  </Router>
+);
+export default AppRouter;

@@ -7,28 +7,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { dbService, storageService } from '../base';
 
-function Tweets({ tweetObject, isOwner }) {
+const Nweet = ({ nweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
-  const [newTweet, setNewTweet] = useState(tweetObject.text);
+  const [newNweet, setNewNweet] = useState(nweetObj.text);
   const onDeleteClick = async () => {
-    const ok = window.confirm('Are you sure you want to delete this tweet');
+    const ok = window.confirm('Are you sure you want to delete this nweet?');
     if (ok) {
-      // delete the tweet
-      await dbService.doc(`tweets/${tweetObject.id}`).delete();
-      await storageService.refFromURL(tweetObject.attachmentUrl).delete();
+      await dbService.doc(`nweets/${nweetObj.id}`).delete();
+      await storageService.refFromURL(nweetObj.attachmentUrl).delete();
     }
   };
+  const toggleEditing = () => setEditing((prev) => !prev);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.doc(`tweets/${tweetObject.id}`).update({
-      text: newTweet,
+    await dbService.doc(`nweets/${nweetObj.id}`).update({
+      text: newNweet,
     });
     setEditing(false);
   };
   const onChange = (event) => {
-    setNewTweet(event.target.value);
+    const {
+      target: { value },
+    } = event;
+    setNewNweet(value);
   };
-  const toggleEditing = () => setEditing((prev) => !prev);
   return (
     <div className="nweet">
       {editing ? (
@@ -36,8 +38,8 @@ function Tweets({ tweetObject, isOwner }) {
           <form onSubmit={onSubmit} className="container nweetEdit">
             <input
               type="text"
-              placeholder="Edit your tweet"
-              value={newTweet}
+              placeholder="Edit your nweet"
+              value={newNweet}
               required
               autoFocus
               onChange={onChange}
@@ -51,9 +53,9 @@ function Tweets({ tweetObject, isOwner }) {
         </>
       ) : (
         <>
-          <h4>{tweetObject.text}</h4>
-          {tweetObject.attachmentUrl && (
-            <img src={tweetObject.attachmentUrl} alt="attachment" />
+          <h4>{nweetObj.text}</h4>
+          {nweetObj.attachmentUrl && (
+            <img src={nweetObj.attachmentUrl} alt="attachment" />
           )}
           {isOwner && (
             <div className="nweet__actions">
@@ -69,6 +71,6 @@ function Tweets({ tweetObject, isOwner }) {
       )}
     </div>
   );
-}
+};
 
-export default Tweets;
+export default Nweet;
