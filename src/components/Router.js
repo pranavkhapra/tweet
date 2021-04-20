@@ -11,13 +11,14 @@ function Router({ isLoggedIn, userObject }) {
     <>
       <BrowserRouter>
         <Switch>
-          {isLoggedIn && <Navigation /> ? (
+          {isLoggedIn && <Navigation userObject={userObject} /> ? (
             <>
               <Navigation />
               <Route path="/">
                 <Home userObject={userObject} />
               </Route>
-              <Route path="/profile" component={Profile} />
+              <Route path="/profile" />
+              <Profile userObject={userObject} />
               <Redirect from="*" to="/" />
             </>
           ) : (

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { dbService } from '../base';
+import { dbService, storageService } from '../base';
 
 function Tweets({ tweetObject, isOwner }) {
   const [editing, setEditing] = useState(false);
@@ -10,6 +10,7 @@ function Tweets({ tweetObject, isOwner }) {
     if (ok) {
       // delete the tweet
       await dbService.doc(`tweets/${tweetObject.id}`).delete();
+      await storageService.refFromURL(tweetObject.attachmentUrl).delete();
     }
   };
   const onSubmit = async (event) => {

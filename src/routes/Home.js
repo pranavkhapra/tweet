@@ -7,7 +7,7 @@ import Tweets from '../components/Tweets';
 function Home({ userObject }) {
   const [tweet, setTweet] = useState('');
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState(null);
+  const [attachment, setAttachment] = useState('');
   // when components get mount we call getTweets and get all the data querysnpshot
   // const getTweets = async () => {
   //   const dbTweets = await dbService.collection('tweets').get();
